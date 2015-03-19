@@ -4,8 +4,8 @@ SERVER_FILES = server.c
 CLIENT_FILES = client.c 
 
 all:
-	gcc $(SERVER_FILES) -o server
-	gcc $(CLIENT_FILES) -o client
+	gcc -g $(SERVER_FILES) -o server
+	gcc -g $(CLIENT_FILES) -o client
 
 s:
 	./server $(PORT)

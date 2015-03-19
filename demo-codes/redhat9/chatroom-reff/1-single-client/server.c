@@ -7,6 +7,7 @@
 
 
 #define LISTEN_PORT 9000
+
 void sig_pipe( int signo )
 {
 	printf( "sig_pipe envoked! \n" );
@@ -15,8 +16,7 @@ void sig_pipe( int signo )
 
 void sig_int( int signo )
 {
-	printf( "sig_int envoked! \n" ); 
-	
+	printf( "sig_int envoked! \n" ); 	
 	return;
 }
 
@@ -29,15 +29,14 @@ int main( int argc, char *argv[] )
 	socklen_t client_addr_len;
 	char str[32];
 	char buf[32];
-	int total = 0, i, j;
-	int ret;
-
+	int total = 0, i, j, ret;
 	struct sigaction newact, oldact;
 
-	/* set our handler, save the old one */
+	/* set our handler, save the old one
 	newact.sa_handler = sig_int;
 	newact.sa_flags = 0;
 	sigaction(SIGINT, &newact, &oldact );
+    */
 
 	/* set our handler, save the old one */
 	newact.sa_handler = sig_pipe;
@@ -45,8 +44,9 @@ int main( int argc, char *argv[] )
 	sigaction(SIGPIPE, &newact, &oldact );
 
 	/* get the listen port from command line argv[1] */
-	if( argv[1] )
+	if( argv[1] ) {
 		port = atoi( argv[1] );
+    }
 
 	printf( "server begin at port: %d \n", port );
 	
@@ -61,8 +61,9 @@ int main( int argc, char *argv[] )
 
 	/* bind server listen port */
 	ret = bind( listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr) );
-	if( ret < 0 )
+	if( ret < 0 ) {
 		printf( "server bind error !\n" );
+    }
 
 	/* server begin to listen */
 	listen( listen_fd, 8 );
@@ -70,10 +71,10 @@ int main( int argc, char *argv[] )
 	
 	client_addr_len = sizeof( client_addr );
 	conn_fd = accept( listen_fd, (struct sockaddr *)&client_addr, &client_addr_len );
-		
-	printf( "client is connected from %s:%d! \n", 
-		inet_ntop(AF_INET, &client_addr.sin_addr, str, sizeof(str)),
-		ntohs(client_addr.sin_port) );
+	
+    bzero(str, sizeof(str));
+	inet_ntop(AF_INET, &client_addr.sin_addr, str, sizeof(str)),
+    printf( "client is connected from %s:%d! \n", str, ntohs(client_addr.sin_port) );
 		
 	while( 1 )
 	{

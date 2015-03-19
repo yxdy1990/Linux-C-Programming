@@ -14,12 +14,12 @@ int main( int argc, char *argv[] )
 	int conn_fd;			/* define connect fd */
 	struct sockaddr_in server_addr;
 	char buf[64];
-	int n;
-	int ret;
+	int n, ret;
 
 	/* get the server ip from command line argv[1] */
-	if( argc >= 2 )
+	if( argc >= 2 ) {
 		strncpy( ip, argv[1], 16 );
+    }
 
 	/* get the server port from command line argv[2] */
 	if( argc >= 3 )
@@ -39,8 +39,10 @@ int main( int argc, char *argv[] )
 	/* connect to server listen port */
 	ret = connect( conn_fd, (struct sockaddr *)&server_addr, sizeof(server_addr) );
 	if( ret >= 0 )
+    {
 		printf( "server is connected! \n" );
-	else
+    }
+    else
 	{
 		printf( "server is NOT connected! \n" );
 		exit( 0 );
@@ -51,7 +53,9 @@ int main( int argc, char *argv[] )
 		fgets( buf, 32, stdin );
 		write( conn_fd, buf, strlen(buf) );
 		
-		n = read( conn_fd, buf, sizeof(buf) );
+        sleep(3);
+		
+        n = read( conn_fd, buf, sizeof(buf) );
 		if( n > 0 )
 		{
 			buf[n] = '\0';
